@@ -5,9 +5,13 @@ import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAx
 export function CompareChart({
   title,
   data,
+  beforeLabel = "Before",
+  afterLabel = "After",
 }: {
   title: string;
   data: { name: string; before: number; after: number }[];
+  beforeLabel?: string;
+  afterLabel?: string;
 }) {
   return (
     <section className="rounded-lg border border-zinc-200 bg-white p-4">
@@ -20,8 +24,8 @@ export function CompareChart({
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="before" fill="#71717a" />
-            <Bar dataKey="after" fill="#18181b" />
+            <Bar dataKey="before" name={beforeLabel} fill="#a1a1aa" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="after" name={afterLabel} fill="#0f766e" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

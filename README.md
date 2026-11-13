@@ -2,7 +2,7 @@
 
 A support agent you can measure: guardrails, tool-path evals, and a single-agent versus multi-agent comparison, with every published number coming from a real eval file.
 
-Deployed app: TODO(me)
+Deployed app: https://agent-reliability-lab-eosin.vercel.app/
 Demo video: TODO(me)
 
 ## The three projects

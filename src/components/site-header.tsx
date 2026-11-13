@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/", label: "Overview" },
@@ -8,6 +12,7 @@ const links = [
 ];
 
 export function SiteHeader() {
+  const pathname = usePathname();
   return (
     <header className="border-b border-zinc-200 bg-white">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
@@ -15,11 +20,22 @@ export function SiteHeader() {
           Agent Reliability Lab
         </Link>
         <nav className="flex flex-wrap gap-1 text-sm" aria-label="Main">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} className="rounded-md px-2 py-1 text-zinc-700 hover:bg-zinc-100">
-              {link.label}
-            </Link>
-          ))}
+          {links.map((link) => {
+            const active = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "rounded-md px-2.5 py-1",
+                  active ? "bg-zinc-950 text-white" : "text-zinc-700 hover:bg-zinc-100",
+                )}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </header>

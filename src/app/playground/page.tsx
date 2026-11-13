@@ -12,9 +12,9 @@ export default function PlaygroundPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Playground</h1>
-        <p className="mt-2 max-w-3xl text-sm text-zinc-700">
-          Each run gets a new database seeded with orders 4510–4529. The trace streams as the agent calls tools. The model is chosen on the server.
+        <h1 className="text-3xl font-semibold tracking-tight">Playground</h1>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-700">
+          Pick a preset or write a short request. Each run starts from the same 20 orders. The trace shows the model turns and tool calls as they happen, and the panel on the side shows the refunds, tickets, and orders left behind.
         </p>
       </div>
       <PlaygroundClient presets={presets} passcodeRequired={Boolean(process.env.DEMO_PASSCODE)} />
