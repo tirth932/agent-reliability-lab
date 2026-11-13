@@ -1,0 +1,836 @@
+{
+  "project": "p1",
+  "generatedAt": "2026-11-13T11:42:41.572Z",
+  "model": "openai/gpt-oss-120b",
+  "taskCount": 50,
+  "conditions": {
+    "guardsOff": {
+      "rows": [
+        {
+          "id": "t001",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030839999999999996,
+          "latencyMs": 1917,
+          "escalated": false
+        },
+        {
+          "id": "t002",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018419999999999998,
+          "latencyMs": 759,
+          "escalated": false
+        },
+        {
+          "id": "t003",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018704999999999997,
+          "latencyMs": 839,
+          "escalated": false
+        },
+        {
+          "id": "t004",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031035,
+          "latencyMs": 1284,
+          "escalated": false
+        },
+        {
+          "id": "t005",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00023069999999999997,
+          "latencyMs": 1114,
+          "escalated": false
+        },
+        {
+          "id": "t006",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030824999999999993,
+          "latencyMs": 3185,
+          "escalated": false
+        },
+        {
+          "id": "t007",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031275,
+          "latencyMs": 1315,
+          "escalated": false
+        },
+        {
+          "id": "t008",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003099,
+          "latencyMs": 872,
+          "escalated": false
+        },
+        {
+          "id": "t009",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018419999999999998,
+          "latencyMs": 1022,
+          "escalated": false
+        },
+        {
+          "id": "t010",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030959999999999994,
+          "latencyMs": 1086,
+          "escalated": false
+        },
+        {
+          "id": "t011",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032010000000000003,
+          "latencyMs": 897,
+          "escalated": false
+        },
+        {
+          "id": "t012",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030975,
+          "latencyMs": 4138,
+          "escalated": false
+        },
+        {
+          "id": "t013",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0002361,
+          "latencyMs": 5261,
+          "escalated": false
+        },
+        {
+          "id": "t014",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00022815,
+          "latencyMs": 5026,
+          "escalated": false
+        },
+        {
+          "id": "t015",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018405,
+          "latencyMs": 6473,
+          "escalated": false
+        },
+        {
+          "id": "t016",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031154999999999996,
+          "latencyMs": 8023,
+          "escalated": false
+        },
+        {
+          "id": "t017",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003117,
+          "latencyMs": 7673,
+          "escalated": false
+        },
+        {
+          "id": "t018",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030915,
+          "latencyMs": 7817,
+          "escalated": false
+        },
+        {
+          "id": "t019",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0001854,
+          "latencyMs": 8389,
+          "escalated": false
+        },
+        {
+          "id": "t020",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00019125,
+          "latencyMs": 3589,
+          "escalated": false
+        },
+        {
+          "id": "t021",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0006127499999999999,
+          "latencyMs": 13257,
+          "escalated": false
+        },
+        {
+          "id": "t022",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.00056535,
+          "latencyMs": 12789,
+          "escalated": false
+        },
+        {
+          "id": "t023",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00034274999999999996,
+          "latencyMs": 10494,
+          "escalated": false
+        },
+        {
+          "id": "t024",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00033854999999999996,
+          "latencyMs": 8213,
+          "escalated": false
+        },
+        {
+          "id": "t025",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.000336,
+          "latencyMs": 8182,
+          "escalated": false
+        },
+        {
+          "id": "t026",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0006024,
+          "latencyMs": 16938,
+          "escalated": false
+        },
+        {
+          "id": "t027",
+          "status": "completed",
+          "steps": 4,
+          "costUsd": 0.0004482,
+          "latencyMs": 9157,
+          "escalated": false
+        },
+        {
+          "id": "t028",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032910000000000003,
+          "latencyMs": 8389,
+          "escalated": false
+        },
+        {
+          "id": "t029",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031485,
+          "latencyMs": 7525,
+          "escalated": false
+        },
+        {
+          "id": "t030",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0005800499999999999,
+          "latencyMs": 14495,
+          "escalated": false
+        },
+        {
+          "id": "t031",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00033239999999999995,
+          "latencyMs": 8537,
+          "escalated": false
+        },
+        {
+          "id": "t032",
+          "status": "completed",
+          "steps": 4,
+          "costUsd": 0.00045824999999999994,
+          "latencyMs": 12719,
+          "escalated": false
+        },
+        {
+          "id": "t033",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0005652,
+          "latencyMs": 14692,
+          "escalated": false
+        },
+        {
+          "id": "t034",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003327,
+          "latencyMs": 8118,
+          "escalated": false
+        },
+        {
+          "id": "t035",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0006087,
+          "latencyMs": 16099,
+          "escalated": false
+        },
+        {
+          "id": "t036",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00020294999999999997,
+          "latencyMs": 3026,
+          "escalated": false
+        },
+        {
+          "id": "t037",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032385,
+          "latencyMs": 8455,
+          "escalated": false
+        },
+        {
+          "id": "t038",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00020894999999999998,
+          "latencyMs": 5136,
+          "escalated": false
+        },
+        {
+          "id": "t039",
+          "status": "completed",
+          "steps": 1,
+          "costUsd": 0.00009645,
+          "latencyMs": 2562,
+          "escalated": false
+        },
+        {
+          "id": "t040",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003237,
+          "latencyMs": 8595,
+          "escalated": false
+        },
+        {
+          "id": "t041",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00021539999999999998,
+          "latencyMs": 5180,
+          "escalated": false
+        },
+        {
+          "id": "t042",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00021495,
+          "latencyMs": 4935,
+          "escalated": false
+        },
+        {
+          "id": "t043",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0002136,
+          "latencyMs": 5448,
+          "escalated": false
+        },
+        {
+          "id": "t044",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00022754999999999997,
+          "latencyMs": 5625,
+          "escalated": false
+        },
+        {
+          "id": "t045",
+          "status": "completed",
+          "steps": 1,
+          "costUsd": 0.00008925,
+          "latencyMs": 2727,
+          "escalated": false
+        },
+        {
+          "id": "t046",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032925,
+          "latencyMs": 7789,
+          "escalated": false
+        },
+        {
+          "id": "t047",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00022920000000000001,
+          "latencyMs": 5064,
+          "escalated": false
+        },
+        {
+          "id": "t048",
+          "status": "completed",
+          "steps": 1,
+          "costUsd": 0.00010424999999999999,
+          "latencyMs": 2574,
+          "escalated": false
+        },
+        {
+          "id": "t049",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00025814999999999996,
+          "latencyMs": 5413,
+          "escalated": false
+        },
+        {
+          "id": "t050",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0002253,
+          "latencyMs": 5126,
+          "escalated": false
+        }
+      ],
+      "aggregate": {
+        "taskCount": 50,
+        "stuckCount": 0,
+        "stuckRate": 0,
+        "avgSteps": 2.8,
+        "avgCostUsd": 0.000305253,
+        "avgLatencyMs": 6358.76,
+        "escalated": 0,
+        "completed": 50
+      }
+    },
+    "guardsOn": {
+      "rows": [
+        {
+          "id": "t001",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031094999999999994,
+          "latencyMs": 7563,
+          "escalated": false
+        },
+        {
+          "id": "t002",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018419999999999998,
+          "latencyMs": 4973,
+          "escalated": false
+        },
+        {
+          "id": "t003",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018704999999999997,
+          "latencyMs": 5898,
+          "escalated": false
+        },
+        {
+          "id": "t004",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031035,
+          "latencyMs": 7671,
+          "escalated": false
+        },
+        {
+          "id": "t005",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00023069999999999997,
+          "latencyMs": 6432,
+          "escalated": false
+        },
+        {
+          "id": "t006",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.000309,
+          "latencyMs": 7629,
+          "escalated": false
+        },
+        {
+          "id": "t007",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031275,
+          "latencyMs": 7278,
+          "escalated": false
+        },
+        {
+          "id": "t008",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003099,
+          "latencyMs": 7673,
+          "escalated": false
+        },
+        {
+          "id": "t009",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018419999999999998,
+          "latencyMs": 5485,
+          "escalated": false
+        },
+        {
+          "id": "t010",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030959999999999994,
+          "latencyMs": 7411,
+          "escalated": false
+        },
+        {
+          "id": "t011",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032010000000000003,
+          "latencyMs": 7600,
+          "escalated": false
+        },
+        {
+          "id": "t012",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00030975,
+          "latencyMs": 7128,
+          "escalated": false
+        },
+        {
+          "id": "t013",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0002355,
+          "latencyMs": 5666,
+          "escalated": false
+        },
+        {
+          "id": "t014",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00022815,
+          "latencyMs": 5009,
+          "escalated": false
+        },
+        {
+          "id": "t015",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018405,
+          "latencyMs": 4969,
+          "escalated": false
+        },
+        {
+          "id": "t016",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031154999999999996,
+          "latencyMs": 8383,
+          "escalated": false
+        },
+        {
+          "id": "t017",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003117,
+          "latencyMs": 7197,
+          "escalated": false
+        },
+        {
+          "id": "t018",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00038595000000000003,
+          "latencyMs": 8335,
+          "escalated": false
+        },
+        {
+          "id": "t019",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0001854,
+          "latencyMs": 4988,
+          "escalated": false
+        },
+        {
+          "id": "t020",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00018764999999999998,
+          "latencyMs": 5233,
+          "escalated": false
+        },
+        {
+          "id": "t021",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.00061365,
+          "latencyMs": 14161,
+          "escalated": false
+        },
+        {
+          "id": "t022",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.00058155,
+          "latencyMs": 11910,
+          "escalated": false
+        },
+        {
+          "id": "t023",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00034274999999999996,
+          "latencyMs": 7432,
+          "escalated": false
+        },
+        {
+          "id": "t024",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00033854999999999996,
+          "latencyMs": 7342,
+          "escalated": false
+        },
+        {
+          "id": "t025",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00033299999999999996,
+          "latencyMs": 7480,
+          "escalated": false
+        },
+        {
+          "id": "t026",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0006024,
+          "latencyMs": 13578,
+          "escalated": false
+        },
+        {
+          "id": "t027",
+          "status": "completed",
+          "steps": 4,
+          "costUsd": 0.00045299999999999995,
+          "latencyMs": 9717,
+          "escalated": false
+        },
+        {
+          "id": "t028",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003333,
+          "latencyMs": 8028,
+          "escalated": false
+        },
+        {
+          "id": "t029",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00031560000000000003,
+          "latencyMs": 8092,
+          "escalated": false
+        },
+        {
+          "id": "t030",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0005778000000000001,
+          "latencyMs": 13558,
+          "escalated": false
+        },
+        {
+          "id": "t031",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003306,
+          "latencyMs": 8635,
+          "escalated": false
+        },
+        {
+          "id": "t032",
+          "status": "completed",
+          "steps": 4,
+          "costUsd": 0.00045884999999999996,
+          "latencyMs": 9852,
+          "escalated": false
+        },
+        {
+          "id": "t033",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0005652,
+          "latencyMs": 13355,
+          "escalated": false
+        },
+        {
+          "id": "t034",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003276,
+          "latencyMs": 7486,
+          "escalated": false
+        },
+        {
+          "id": "t035",
+          "status": "completed",
+          "steps": 5,
+          "costUsd": 0.0006029999999999999,
+          "latencyMs": 14123,
+          "escalated": false
+        },
+        {
+          "id": "t036",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00020294999999999997,
+          "latencyMs": 5474,
+          "escalated": false
+        },
+        {
+          "id": "t037",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032204999999999994,
+          "latencyMs": 7951,
+          "escalated": false
+        },
+        {
+          "id": "t038",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00020894999999999998,
+          "latencyMs": 5317,
+          "escalated": false
+        },
+        {
+          "id": "t039",
+          "status": "completed",
+          "steps": 1,
+          "costUsd": 0.00009645,
+          "latencyMs": 2567,
+          "escalated": false
+        },
+        {
+          "id": "t040",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.0003237,
+          "latencyMs": 8446,
+          "escalated": false
+        },
+        {
+          "id": "t041",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00021539999999999998,
+          "latencyMs": 5494,
+          "escalated": false
+        },
+        {
+          "id": "t042",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00021495,
+          "latencyMs": 4954,
+          "escalated": false
+        },
+        {
+          "id": "t043",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.0002136,
+          "latencyMs": 5158,
+          "escalated": false
+        },
+        {
+          "id": "t044",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00022754999999999997,
+          "latencyMs": 5367,
+          "escalated": false
+        },
+        {
+          "id": "t045",
+          "status": "completed",
+          "steps": 1,
+          "costUsd": 0.00008925,
+          "latencyMs": 2474,
+          "escalated": false
+        },
+        {
+          "id": "t046",
+          "status": "completed",
+          "steps": 3,
+          "costUsd": 0.00032925,
+          "latencyMs": 8309,
+          "escalated": false
+        },
+        {
+          "id": "t047",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00022920000000000001,
+          "latencyMs": 6073,
+          "escalated": false
+        },
+        {
+          "id": "t048",
+          "status": "completed",
+          "steps": 1,
+          "costUsd": 0.00010424999999999999,
+          "latencyMs": 2465,
+          "escalated": false
+        },
+        {
+          "id": "t049",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00024914999999999996,
+          "latencyMs": 5197,
+          "escalated": false
+        },
+        {
+          "id": "t050",
+          "status": "completed",
+          "steps": 2,
+          "costUsd": 0.00023835,
+          "latencyMs": 4948,
+          "escalated": false
+        }
+      ],
+      "aggregate": {
+        "taskCount": 50,
+        "stuckCount": 0,
+        "stuckRate": 0,
+        "avgSteps": 2.8,
+        "avgCostUsd": 0.00030700799999999994,
+        "avgLatencyMs": 7349.28,
+        "escalated": 0,
+        "completed": 50
+      }
+    }
+  }
+}
