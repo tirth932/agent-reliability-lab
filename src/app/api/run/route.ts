@@ -4,7 +4,8 @@ import { runAgent } from "@/core/agent";
 import { priceFor } from "@/core/cost";
 import { createDb } from "@/core/db";
 import { exportTrace } from "@/core/langfuse";
-import { createGroqLlm, publicErrorMessage, resolveModel } from "@/core/llm";
+import { createLlm, publicErrorMessage, resolveModel } from "@/core/llm";
+import { isLlmProvider, providerInfo, serverApiKey, type LlmProvider } from "@/core/provider-catalog";
 import { PRICING, type ModelPrice } from "../../../../config/pricing";
 import { loadTaskFile } from "@/evals/load";
 import { clientIp, rateLimit } from "@/lib/ratelimit";
@@ -45,14 +46,28 @@ export async function POST(request: Request) {
     return Response.json({ error: parsed.error.issues.map((issue) => issue.message).join("; ") }, { status: 400 });
   }
 
-  const suppliedKey = request.headers.get("x-groq-api-key")?.trim() ?? "";
-  if (suppliedKey.length > 200) {
+  const suppliedKey = (request.headers.get("x-llm-api-key") ?? request.headers.get("x-groq-api-key") ?? "").trim();
+  if (suppliedKey.length > 500) {
     return Response.json({ error: "API key is too long." }, { status: 400 });
+  }
+  const provider: LlmProvider = parsed.data.provider && isLlmProvider(parsed.data.provider) ? parsed.data.provider : "groq";
+  const apiKey = suppliedKey || serverApiKey(provider);
+  if (!apiKey) {
+    return Response.json(
+      { error: `Add your ${providerInfo(provider).label} API key. Leaving it blank uses the server key, and this server’s default is Groq.` },
+      { status: 400 },
+    );
   }
   let model: string;
   let pricing: Record<string, ModelPrice | null> | undefined;
   try {
-    const resolved = resolveRunModel(parsed.data.model, parsed.data.inputPerMillion, parsed.data.outputPerMillion, Boolean(suppliedKey));
+    const resolved = resolveRunModel(
+      provider,
+      parsed.data.model,
+      parsed.data.inputPerMillion,
+      parsed.data.outputPerMillion,
+      Boolean(suppliedKey),
+    );
     model = resolved.model;
     pricing = resolved.pricing;
   } catch (error) {
@@ -79,7 +94,7 @@ export async function POST(request: Request) {
       const db = await createDb({ idempotentRefunds: flags.idempotentRefunds });
       const runId = randomUUID();
       try {
-        const llm = createGroqLlm(suppliedKey || undefined);
+        const llm = createLlm(provider, apiKey);
         const shared = {
           userMessage: text,
           flags,
@@ -113,12 +128,14 @@ export async function POST(request: Request) {
 }
 
 function resolveRunModel(
+  provider: LlmProvider,
   requested: string | undefined,
   inputPerMillion: number | undefined,
   outputPerMillion: number | undefined,
   ownKey: boolean,
 ): { model: string; pricing?: Record<string, ModelPrice | null> } {
-  const model = requested && requested.length > 0 ? requested : resolveModel();
+  const fallback = provider === "groq" ? resolveModel() : providerInfo(provider).defaultModel;
+  const model = requested && requested.length > 0 ? requested : fallback;
   if (!/^[A-Za-z0-9_./:-]+$/.test(model)) {
     throw new Error("Model id can contain letters, numbers, and . / _ : - only.");
   }
@@ -127,7 +144,7 @@ function resolveRunModel(
     return { model };
   }
   if (!ownKey) {
-    throw new Error("That model is not priced on this server. Leave the model blank to use Groq openai/gpt-oss-120b, or add your own API key and the token prices.");
+    throw new Error(`No price is configured for "${model}". Use a priced Groq model, or add your own API key and the token prices.`);
   }
   if (inputPerMillion == null || outputPerMillion == null) {
     throw new Error("Enter the input and output price per million tokens for this model.");

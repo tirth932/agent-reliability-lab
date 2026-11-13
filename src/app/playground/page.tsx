@@ -1,6 +1,7 @@
 import { PlaygroundClient } from "@/components/playground-client";
 import { loadTaskFile } from "@/evals/load";
-import { DEFAULT_MODEL, PRICING } from "../../../config/pricing";
+import { LLM_PROVIDERS } from "@/core/provider-catalog";
+import { PRICING } from "../../../config/pricing";
 
 const PRESET_IDS = ["t001", "t004", "t021", "t037", "t041", "t048"];
 
@@ -14,7 +15,7 @@ export default function PlaygroundPage() {
     const task = tasks.find((item) => item.id === id);
     return task ? [{ id: task.id, input: task.input, note: PRESET_NOTES[task.id] }] : [];
   });
-  const models = Object.entries(PRICING).flatMap(([id, price]) => (price ? [{ id }] : []));
+  const pricedModels = Object.entries(PRICING).flatMap(([id, price]) => (price ? [id] : []));
   return (
     <div className="space-y-4">
       <div>
@@ -25,8 +26,12 @@ export default function PlaygroundPage() {
       </div>
       <PlaygroundClient
         presets={presets}
-        models={models}
-        defaultModel={DEFAULT_MODEL}
+        providers={LLM_PROVIDERS.map((provider) => ({
+          id: provider.id,
+          label: provider.label,
+          defaultModel: provider.defaultModel,
+        }))}
+        pricedModels={pricedModels}
         passcodeRequired={Boolean(process.env.DEMO_PASSCODE)}
       />
     </div>

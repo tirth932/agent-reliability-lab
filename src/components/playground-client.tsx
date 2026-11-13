@@ -6,8 +6,7 @@ import type { RunMetrics, TraceEvent } from "@/core/trace";
 import { DbPanel } from "@/components/db-panel";
 import { TraceTimeline } from "@/components/trace-timeline";
 
-type Preset = { id: string; input: string; note?: string };
-type KnownModel = { id: string };
+type ProviderOption = { id: "groq" | "openai" | "anthropic" | "google" | "grok"; label: string; defaultModel: string };
 
 type Flags = {
   stepLimit: boolean;
@@ -27,22 +26,25 @@ const defaultFlags: Flags = {
   injectFaults: false,
 };
 
+type Preset = { id: string; input: string; note?: string };
+
 export function PlaygroundClient({
   presets,
-  models,
-  defaultModel,
+  providers,
+  pricedModels,
   passcodeRequired,
 }: {
   presets: Preset[];
-  models: KnownModel[];
-  defaultModel: string;
+  providers: ProviderOption[];
+  pricedModels: string[];
   passcodeRequired: boolean;
 }) {
+  const groq = providers.find((provider) => provider.id === "groq") ?? providers[0];
   const [taskId, setTaskId] = useState(presets[0]?.id ?? "");
   const [message, setMessage] = useState("");
   const [mode, setMode] = useState<"single" | "multi">("single");
-  const [modelChoice, setModelChoice] = useState(defaultModel);
-  const [customModel, setCustomModel] = useState("");
+  const [providerId, setProviderId] = useState<ProviderOption["id"]>(groq?.id ?? "groq");
+  const [modelId, setModelId] = useState(groq?.defaultModel ?? "");
   const [apiKey, setApiKey] = useState("");
   const [inputPrice, setInputPrice] = useState("");
   const [outputPrice, setOutputPrice] = useState("");
@@ -56,6 +58,9 @@ export function PlaygroundClient({
   const [running, setRunning] = useState(false);
 
   const selected = useMemo(() => presets.find((preset) => preset.id === taskId), [presets, taskId]);
+
+  const provider = providers.find((item) => item.id === providerId);
+  const needsPrices = !pricedModels.includes(modelId.trim());
 
   async function run() {
     setRunning(true);
@@ -71,14 +76,15 @@ export function PlaygroundClient({
         headers: {
           "Content-Type": "application/json",
           ...(passcode ? { "x-demo-passcode": passcode } : {}),
-          ...(apiKey.trim() ? { "x-groq-api-key": apiKey.trim() } : {}),
+          ...(apiKey.trim() ? { "x-llm-api-key": apiKey.trim() } : {}),
         },
         body: JSON.stringify({
           taskId: message.trim() ? undefined : taskId || undefined,
           message: text,
           mode,
-          model: modelChoice === "custom" ? customModel.trim() : modelChoice,
-          ...(modelChoice === "custom" && inputPrice.trim() && outputPrice.trim()
+          provider: providerId,
+          model: modelId.trim(),
+          ...(needsPrices && inputPrice.trim() && outputPrice.trim()
             ? { inputPerMillion: Number(inputPrice), outputPerMillion: Number(outputPrice) }
             : {}),
           flags,
@@ -188,44 +194,56 @@ export function PlaygroundClient({
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block text-sm">
-              <span className="mb-1 block font-medium">Model</span>
+              <span className="mb-1 block font-medium">Provider</span>
               <select
                 className="w-full rounded-md border border-zinc-300 bg-white px-2 py-2"
-                value={modelChoice}
-                onChange={(event) => setModelChoice(event.target.value)}
+                value={providerId}
+                onChange={(event) => {
+                  const next = providers.find((item) => item.id === event.target.value);
+                  if (!next) return;
+                  setProviderId(next.id);
+                  setModelId(next.defaultModel);
+                  setApiKey("");
+                  setInputPrice("");
+                  setOutputPrice("");
+                }}
               >
-                {models.map((model) => (
-                  <option key={model.id} value={model.id}>
-                    {model.id}
-                    {model.id === defaultModel ? " (default)" : ""}
+                {providers.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                    {item.id === "groq" ? " (default)" : ""}
                   </option>
                 ))}
-                <option value="custom">Another Groq model</option>
               </select>
             </label>
             <label className="block text-sm">
-              <span className="mb-1 block font-medium">Your Groq API key</span>
+              <span className="mb-1 block font-medium">Model id</span>
+              <input
+                className="w-full rounded-md border border-zinc-300 px-3 py-2"
+                list="priced-models"
+                value={modelId}
+                onChange={(event) => setModelId(event.target.value)}
+              />
+              <datalist id="priced-models">
+                {providerId === "groq"
+                  ? pricedModels.map((id) => <option key={id} value={id} />)
+                  : null}
+              </datalist>
+            </label>
+            <label className="block text-sm sm:col-span-2">
+              <span className="mb-1 block font-medium">Your {provider?.label ?? "provider"} API key</span>
               <input
                 type="password"
                 autoComplete="off"
                 className="w-full rounded-md border border-zinc-300 px-3 py-2"
                 value={apiKey}
-                placeholder="Blank uses this project's key"
+                placeholder={providerId === "groq" ? "Blank uses this project's Groq key" : "Required unless this server has that provider's key"}
                 onChange={(event) => setApiKey(event.target.value)}
               />
             </label>
           </div>
-          {modelChoice === "custom" ? (
-            <div className="grid gap-3 sm:grid-cols-3">
-              <label className="block text-sm sm:col-span-3">
-                <span className="mb-1 block font-medium">Model id</span>
-                <input
-                  className="w-full rounded-md border border-zinc-300 px-3 py-2"
-                  value={customModel}
-                  placeholder="openai/gpt-oss-20b"
-                  onChange={(event) => setCustomModel(event.target.value)}
-                />
-              </label>
+          {needsPrices ? (
+            <div className="grid gap-3 sm:grid-cols-2">
               <label className="block text-sm">
                 <span className="mb-1 block font-medium">Input $ / million</span>
                 <input
@@ -247,7 +265,7 @@ export function PlaygroundClient({
             </div>
           ) : null}
           <p className="text-xs leading-5 text-zinc-500">
-            The default is this project's Groq key and {defaultModel}. A key you type is used for that run only and is not saved.
+            The default is this project's Groq key and {groq?.defaultModel}. A key you type is used for that run only and is not saved. OpenAI, Anthropic, Google, and Grok need your own key and the published token price.
           </p>
           {passcodeRequired ? (
             <label className="block text-sm">
@@ -263,7 +281,7 @@ export function PlaygroundClient({
           <button
             type="button"
             className="rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-            disabled={running || !prompt || (modelChoice === "custom" && !customModel.trim())}
+            disabled={running || !prompt || !modelId.trim() || (needsPrices && (!inputPrice.trim() || !outputPrice.trim()))}
             onClick={() => void run()}
           >
             {running ? "Running…" : "Run task"}

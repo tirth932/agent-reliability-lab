@@ -1,6 +1,8 @@
 import Groq from "groq-sdk";
 import type { ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions";
 import { DEFAULT_MODEL } from "../../config/pricing";
+import type { LlmProvider } from "./provider-catalog";
+import { createAnthropicLlm, createGoogleLlm, createOpenAiCompatibleLlm } from "./llm-providers";
 import type { ToolDefinition } from "./tools";
 
 export type ToolCall = {
@@ -45,7 +47,12 @@ export function resolveModel(override?: string): string {
 
 export function publicErrorMessage(error: unknown): string {
   const message = error instanceof Error ? error.message : "Unexpected error";
-  return message.replace(/gsk_[A-Za-z0-9]+/g, "[redacted]");
+  return message
+    .replace(/gsk_[A-Za-z0-9]+/g, "[redacted]")
+    .replace(/sk-ant-[A-Za-z0-9_-]+/g, "[redacted]")
+    .replace(/sk-[A-Za-z0-9_-]+/g, "[redacted]")
+    .replace(/AIza[A-Za-z0-9_-]+/g, "[redacted]")
+    .replace(/xai-[A-Za-z0-9_-]+/g, "[redacted]");
 }
 
 function toGroqMessages(messages: ChatMessage[]): ChatCompletionMessageParam[] {
@@ -164,4 +171,12 @@ export function assistant(content: string | null, toolCalls?: ToolCall[], usage 
 
 export function toolCall(name: string, args: Record<string, unknown>, id = `call_${name}`): ToolCall {
   return { id, name, arguments: JSON.stringify(args) };
+}
+
+export function createLlm(provider: LlmProvider, apiKey: string): LlmClient {
+  if (!apiKey) throw new Error("An API key is required.");
+  if (provider === "groq") return createGroqLlm(apiKey);
+  if (provider === "openai" || provider === "grok") return createOpenAiCompatibleLlm(provider, apiKey);
+  if (provider === "anthropic") return createAnthropicLlm(apiKey);
+  return createGoogleLlm(apiKey);
 }
