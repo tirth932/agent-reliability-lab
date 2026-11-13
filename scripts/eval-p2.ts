@@ -23,11 +23,6 @@ function flags(idempotentRefunds: boolean): AgentFlags {
   };
 }
 
-await confirmSpend(
-  `eval:p2 runs ${tasks.length} tasks twice (idempotency off, then on) with refund timeouts.\n${ceilingEstimate(tasks.length, 2, 10, args.model)}`,
-  args.yes,
-);
-
 async function runCondition(label: string, idempotent: boolean, saveBug: boolean): Promise<P2Row[]> {
   const rows: P2Row[] = [];
   let saved = false;
@@ -60,15 +55,23 @@ async function runCondition(label: string, idempotent: boolean, saveBug: boolean
   return rows;
 }
 
-const idempotencyOff = await runCondition("off", false, true);
-const idempotencyOn = await runCondition("on", true, false);
-writeJson("results/p2.json", {
-  project: "p2",
-  generatedAt: new Date().toISOString(),
-  model: args.model,
-  taskCount: tasks.length,
-  conditions: {
-    idempotencyOff: { rows: idempotencyOff, aggregate: aggregateP2(idempotencyOff) },
-    idempotencyOn: { rows: idempotencyOn, aggregate: aggregateP2(idempotencyOn) },
-  },
-});
+async function main(): Promise<void> {
+  await confirmSpend(
+    `eval:p2 runs ${tasks.length} tasks twice (idempotency off, then on) with refund timeouts.\n${ceilingEstimate(tasks.length, 2, 10, args.model)}`,
+    args.yes,
+  );
+  const idempotencyOff = await runCondition("off", false, true);
+  const idempotencyOn = await runCondition("on", true, false);
+  writeJson("results/p2.json", {
+    project: "p2",
+    generatedAt: new Date().toISOString(),
+    model: args.model,
+    taskCount: tasks.length,
+    conditions: {
+      idempotencyOff: { rows: idempotencyOff, aggregate: aggregateP2(idempotencyOff) },
+      idempotencyOn: { rows: idempotencyOn, aggregate: aggregateP2(idempotencyOn) },
+    },
+  });
+}
+
+void main();

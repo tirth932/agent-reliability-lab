@@ -18,6 +18,7 @@ const flags: AgentFlags = {
   refundTimeoutOnce: false,
 };
 
+async function main(): Promise<void> {
 await confirmSpend(
   [
     `eval:baseline will run ${tasks.length} tasks with guards on and faults off.`,
@@ -45,3 +46,9 @@ const budget = {
 };
 writeJson("config/budget.json", budget);
 console.log(`Average cost $${averageCostUsd.toFixed(6)}. Budget set to 3x = $${budget.costBudgetUsd.toFixed(6)}.`);
+}
+
+main().catch((error: unknown) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+});

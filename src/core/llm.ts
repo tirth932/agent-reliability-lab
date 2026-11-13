@@ -69,6 +69,21 @@ function toGroqMessages(messages: ChatMessage[]): ChatCompletionMessageParam[] {
   });
 }
 
+async function withRateLimitRetry<T>(operation: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      const status = typeof error === "object" && error && "status" in error ? Number(error.status) : 0;
+      if (status !== 429 || attempt === 7) throw error;
+      const waitMs = 15_000 * (attempt + 1);
+      console.error(`Groq rate limit. Waiting ${waitMs / 1000}s before retry ${attempt + 1}.`);
+      await new Promise((resolve) => setTimeout(resolve, waitMs));
+    }
+  }
+  throw new Error("Groq rate limit retries exhausted.");
+}
+
 function reasoningEffort(model: string): "none" | "low" {
   if (model.startsWith("openai/gpt-oss")) return "low";
   return "none";
@@ -79,7 +94,7 @@ export function createGroqLlm(apiKey = process.env.GROQ_API_KEY): LlmClient {
   const client = new Groq({ apiKey });
   return {
     async complete(request) {
-      const response = await client.chat.completions.create({
+      const response = await withRateLimitRetry(() => client.chat.completions.create({
         model: request.model,
         temperature: request.temperature ?? 0,
         messages: toGroqMessages(request.messages),
@@ -98,7 +113,7 @@ export function createGroqLlm(apiKey = process.env.GROQ_API_KEY): LlmClient {
         reasoning_effort: reasoningEffort(request.model),
         reasoning_format: "parsed",
         response_format: request.jsonObject ? { type: "json_object" } : undefined,
-      });
+      }));
       const choice = response.choices[0];
       if (!choice) throw new Error("Groq returned no choices.");
       if (!response.usage) throw new Error("Groq response did not include token usage.");

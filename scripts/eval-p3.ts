@@ -21,11 +21,6 @@ const flags: AgentFlags = {
   refundTimeoutOnce: false,
 };
 
-await confirmSpend(
-  `eval:p3 runs ${tasks.length} tasks x ${args.trials} trials for single and multi-agent.\n${ceilingEstimate(tasks.length, args.trials * 2, 12, args.model)}`,
-  args.yes,
-);
-
 function trial(result: AgentResult, success: boolean): TrialMetrics {
   return {
     success,
@@ -35,6 +30,12 @@ function trial(result: AgentResult, success: boolean): TrialMetrics {
     steps: result.steps,
   };
 }
+
+async function main(): Promise<void> {
+await confirmSpend(
+  `eval:p3 runs ${tasks.length} tasks x ${args.trials} trials for single and multi-agent.\n${ceilingEstimate(tasks.length, args.trials * 2, 12, args.model)}`,
+  args.yes,
+);
 
 const rows: P3TaskRow[] = [];
 for (let index = 0; index < tasks.length; index += 1) {
@@ -63,3 +64,6 @@ writeJson("results/p3.json", {
   aggregate,
   decisionRule: decisionRule(aggregate),
 });
+}
+
+void main();

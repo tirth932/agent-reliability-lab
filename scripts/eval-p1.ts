@@ -32,11 +32,6 @@ const on: AgentFlags = {
   refundTimeoutOnce: false,
 };
 
-await confirmSpend(
-  `eval:p1 runs ${tasks.length} tasks twice (guards off, then guards on) with flaky search.\n${ceilingEstimate(tasks.length, 2, 30, args.model)}`,
-  args.yes,
-);
-
 async function runCondition(label: string, flags: AgentFlags, saveLoops: boolean): Promise<P1Row[]> {
   const rows: P1Row[] = [];
   let saved = 0;
@@ -73,15 +68,23 @@ function rowFrom(id: string, result: AgentResult): P1Row {
   };
 }
 
-const guardsOff = await runCondition("off", off, true);
-const guardsOn = await runCondition("on", on, false);
-writeJson("results/p1.json", {
-  project: "p1",
-  generatedAt: new Date().toISOString(),
-  model: args.model,
-  taskCount: tasks.length,
-  conditions: {
-    guardsOff: { rows: guardsOff, aggregate: aggregateP1(guardsOff) },
-    guardsOn: { rows: guardsOn, aggregate: aggregateP1(guardsOn) },
-  },
-});
+async function main(): Promise<void> {
+  await confirmSpend(
+    `eval:p1 runs ${tasks.length} tasks twice (guards off, then guards on) with flaky search.\n${ceilingEstimate(tasks.length, 2, 30, args.model)}`,
+    args.yes,
+  );
+  const guardsOff = await runCondition("off", off, true);
+  const guardsOn = await runCondition("on", on, false);
+  writeJson("results/p1.json", {
+    project: "p1",
+    generatedAt: new Date().toISOString(),
+    model: args.model,
+    taskCount: tasks.length,
+    conditions: {
+      guardsOff: { rows: guardsOff, aggregate: aggregateP1(guardsOff) },
+      guardsOn: { rows: guardsOn, aggregate: aggregateP1(guardsOn) },
+    },
+  });
+}
+
+void main();

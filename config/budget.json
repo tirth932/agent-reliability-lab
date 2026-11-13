@@ -1,0 +1,7 @@
+{
+  "costBudgetUsd": 0.0009171089999999997,
+  "averageCostUsd": 0.0003057029999999999,
+  "model": "openai/gpt-oss-120b",
+  "taskCount": 50,
+  "generatedAt": "2026-11-13T11:05:10.054Z"
+}
