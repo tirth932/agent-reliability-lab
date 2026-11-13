@@ -1,0 +1,18 @@
+---
+description: Agent Reliability Lab conventions
+alwaysApply: true
+---
+
+- Strict TypeScript. Do not use `any` without a comment explaining why.
+- Keep files small and names clear. Do not leave dead code.
+- Do not add dependencies that are not already in the project without asking.
+- The LLM provider is Groq (`groq-sdk`, `GROQ_API_KEY`), not Anthropic. The public API reads `AGENT_MODEL` on the server and never accepts a model from the client.
+- Keep the Groq client behind `src/core/llm.ts`. Tests use MockLLM. Tests and CI must not call the network.
+- Every guard, trajectory matcher, and idempotency behaviour needs a unit test.
+- Never fabricate evaluation results, percentages, or screenshots. Numbers in the UI and README come from `results/`. Leave gaps as `TODO(me)`.
+- Never commit secrets. `.env*` stays gitignored except `.env.example`.
+- Do not run paid evals unless the user explicitly asks. Eval scripts must print a cost ceiling and wait for `--yes`.
+- Do not hard-code result numbers. If `results/` has no run, show an empty state.
+- The agent loop is hand-written. Do not add LangGraph or the Vercel AI SDK agent helpers.
+- Refund idempotency keys use the harness `requestId`, never a value from the model.
+- A unique index on `refunds.idempotency_key` exists only when idempotent refunds are enabled.

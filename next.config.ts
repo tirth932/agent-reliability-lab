@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Native libsql bindings must stay outside the server bundle.
+  serverExternalPackages: ["@libsql/client", "libsql"],
   turbopack: {
     rules: {
       "*.css": {
