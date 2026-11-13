@@ -7,7 +7,7 @@ export default function ResultsPage() {
       <div className="max-w-3xl">
         <h1 className="text-3xl font-semibold tracking-tight">Results</h1>
         <p className="mt-2 text-sm leading-6 text-zinc-700">
-          Before-and-after numbers for the three projects. Every figure is read from a saved eval. If a project has not been measured yet, its tab stays empty.
+          Before-and-after numbers for the three projects. A few playground runs stay on the Playground page. These tabs read the eval files only, and every figure comes from those files.
         </p>
       </div>
       <ResultsBoard p1={readP1()} p2={readP2()} p3={readP3()} traces={listTraces()} />

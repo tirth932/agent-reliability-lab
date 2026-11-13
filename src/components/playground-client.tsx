@@ -6,7 +6,8 @@ import type { RunMetrics, TraceEvent } from "@/core/trace";
 import { DbPanel } from "@/components/db-panel";
 import { TraceTimeline } from "@/components/trace-timeline";
 
-type Preset = { id: string; input: string };
+type Preset = { id: string; input: string; note?: string };
+type KnownModel = { id: string };
 
 type Flags = {
   stepLimit: boolean;
@@ -26,10 +27,25 @@ const defaultFlags: Flags = {
   injectFaults: false,
 };
 
-export function PlaygroundClient({ presets, passcodeRequired }: { presets: Preset[]; passcodeRequired: boolean }) {
+export function PlaygroundClient({
+  presets,
+  models,
+  defaultModel,
+  passcodeRequired,
+}: {
+  presets: Preset[];
+  models: KnownModel[];
+  defaultModel: string;
+  passcodeRequired: boolean;
+}) {
   const [taskId, setTaskId] = useState(presets[0]?.id ?? "");
   const [message, setMessage] = useState("");
   const [mode, setMode] = useState<"single" | "multi">("single");
+  const [modelChoice, setModelChoice] = useState(defaultModel);
+  const [customModel, setCustomModel] = useState("");
+  const [apiKey, setApiKey] = useState("");
+  const [inputPrice, setInputPrice] = useState("");
+  const [outputPrice, setOutputPrice] = useState("");
   const [flags, setFlags] = useState<Flags>(defaultFlags);
   const [passcode, setPasscode] = useState("");
   const [events, setEvents] = useState<TraceEvent[]>([]);
@@ -55,11 +71,16 @@ export function PlaygroundClient({ presets, passcodeRequired }: { presets: Prese
         headers: {
           "Content-Type": "application/json",
           ...(passcode ? { "x-demo-passcode": passcode } : {}),
+          ...(apiKey.trim() ? { "x-groq-api-key": apiKey.trim() } : {}),
         },
         body: JSON.stringify({
           taskId: message.trim() ? undefined : taskId || undefined,
           message: text,
           mode,
+          model: modelChoice === "custom" ? customModel.trim() : modelChoice,
+          ...(modelChoice === "custom" && inputPrice.trim() && outputPrice.trim()
+            ? { inputPerMillion: Number(inputPrice), outputPerMillion: Number(outputPrice) }
+            : {}),
           flags,
         }),
       });
@@ -90,40 +111,41 @@ export function PlaygroundClient({ presets, passcodeRequired }: { presets: Prese
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
       <section className="space-y-4">
         <div className="space-y-4 rounded-lg border border-zinc-200 bg-white p-4">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block text-sm">
-              <span className="mb-1 block font-medium">Preset task</span>
-              <select
-                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-2"
-                value={taskId}
-                onChange={(event) => {
-                  setTaskId(event.target.value);
-                  setMessage("");
-                }}
-              >
-                <option value="">Custom message</option>
-                {presets.map((preset) => (
-                  <option key={preset.id} value={preset.id}>
-                    {preset.id}: {preset.input.slice(0, 72)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block text-sm">
-              <span className="mb-1 block font-medium">Mode</span>
-              <select
-                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-2"
-                value={mode}
-                onChange={(event) => setMode(event.target.value === "multi" ? "multi" : "single")}
-              >
-                <option value="single">Single agent</option>
-                <option value="multi">Multi-agent</option>
-              </select>
-            </label>
-          </div>
-          {selected && !message.trim() ? (
-            <p className="rounded-md bg-zinc-50 px-3 py-2 text-sm text-zinc-800">{selected.input}</p>
-          ) : null}
+          <fieldset>
+            <legend className="mb-2 text-sm font-medium">Preset task</legend>
+            <div className="space-y-2">
+              {presets.map((preset) => (
+                <label key={preset.id} className="flex items-start gap-2 text-sm">
+                  <input
+                    type="radio"
+                    name="preset"
+                    className="mt-1"
+                    checked={taskId === preset.id && !message.trim()}
+                    onChange={() => {
+                      setTaskId(preset.id);
+                      setMessage("");
+                    }}
+                  />
+                  <span>
+                    <span className="font-medium">{preset.id}</span>
+                    <span className="mt-0.5 block whitespace-normal text-zinc-800">{preset.input}</span>
+                    {preset.note ? <span className="mt-1 block text-xs leading-5 text-zinc-500">{preset.note}</span> : null}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <label className="block text-sm">
+            <span className="mb-1 block font-medium">Mode</span>
+            <select
+              className="w-full rounded-md border border-zinc-300 bg-white px-2 py-2"
+              value={mode}
+              onChange={(event) => setMode(event.target.value === "multi" ? "multi" : "single")}
+            >
+              <option value="single">Single agent</option>
+              <option value="multi">Multi-agent</option>
+            </select>
+          </label>
           <label className="block text-sm">
             <span className="mb-1 flex items-center justify-between font-medium">
               Your own message
@@ -164,6 +186,69 @@ export function PlaygroundClient({ presets, passcodeRequired }: { presets: Prese
           <p className="text-xs leading-5 text-zinc-500">
             Faults make a near-match search come back empty, and make the first refund report a timeout after it is saved. The public site still stops a run at 12 steps or $0.05.
           </p>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block text-sm">
+              <span className="mb-1 block font-medium">Model</span>
+              <select
+                className="w-full rounded-md border border-zinc-300 bg-white px-2 py-2"
+                value={modelChoice}
+                onChange={(event) => setModelChoice(event.target.value)}
+              >
+                {models.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.id}
+                    {model.id === defaultModel ? " (default)" : ""}
+                  </option>
+                ))}
+                <option value="custom">Another Groq model</option>
+              </select>
+            </label>
+            <label className="block text-sm">
+              <span className="mb-1 block font-medium">Your Groq API key</span>
+              <input
+                type="password"
+                autoComplete="off"
+                className="w-full rounded-md border border-zinc-300 px-3 py-2"
+                value={apiKey}
+                placeholder="Blank uses this project's key"
+                onChange={(event) => setApiKey(event.target.value)}
+              />
+            </label>
+          </div>
+          {modelChoice === "custom" ? (
+            <div className="grid gap-3 sm:grid-cols-3">
+              <label className="block text-sm sm:col-span-3">
+                <span className="mb-1 block font-medium">Model id</span>
+                <input
+                  className="w-full rounded-md border border-zinc-300 px-3 py-2"
+                  value={customModel}
+                  placeholder="openai/gpt-oss-20b"
+                  onChange={(event) => setCustomModel(event.target.value)}
+                />
+              </label>
+              <label className="block text-sm">
+                <span className="mb-1 block font-medium">Input $ / million</span>
+                <input
+                  inputMode="decimal"
+                  className="w-full rounded-md border border-zinc-300 px-3 py-2"
+                  value={inputPrice}
+                  onChange={(event) => setInputPrice(event.target.value)}
+                />
+              </label>
+              <label className="block text-sm">
+                <span className="mb-1 block font-medium">Output $ / million</span>
+                <input
+                  inputMode="decimal"
+                  className="w-full rounded-md border border-zinc-300 px-3 py-2"
+                  value={outputPrice}
+                  onChange={(event) => setOutputPrice(event.target.value)}
+                />
+              </label>
+            </div>
+          ) : null}
+          <p className="text-xs leading-5 text-zinc-500">
+            The default is this project's Groq key and {defaultModel}. A key you type is used for that run only and is not saved.
+          </p>
           {passcodeRequired ? (
             <label className="block text-sm">
               <span className="mb-1 block font-medium">Demo passcode</span>
@@ -178,7 +263,7 @@ export function PlaygroundClient({ presets, passcodeRequired }: { presets: Prese
           <button
             type="button"
             className="rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-            disabled={running || !prompt}
+            disabled={running || !prompt || (modelChoice === "custom" && !customModel.trim())}
             onClick={() => void run()}
           >
             {running ? "Running…" : "Run task"}

@@ -8,6 +8,9 @@ export const PLAYGROUND_MAX_COST_USD = 0.05;
 export const runRequestSchema = z.object({
   taskId: z.string().optional(),
   message: z.string().max(300).optional(),
+  model: z.string().trim().max(80).optional(),
+  inputPerMillion: z.number().finite().positive().max(1000).optional(),
+  outputPerMillion: z.number().finite().positive().max(1000).optional(),
   mode: z.enum(["single", "multi"]),
   flags: z.object({
     stepLimit: z.boolean(),
