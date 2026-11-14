@@ -30,7 +30,7 @@ flowchart LR
 
 ## Results
 
-Numbers below are filled only from `results/*.json`. P2 and P3 stay as placeholders until those evals finish.
+Numbers below are filled only from `results/*.json`. P3 stays as a placeholder until that eval finishes.
 
 ### P1 before / after
 
@@ -43,10 +43,12 @@ From `results/p1.json`, 50 tasks, `openai/gpt-oss-120b`. No guards-off run loope
 
 ### P2 before / after
 
+From `results/p2.json`, 50 tasks, `openai/gpt-oss-120b`, with the refund timeout on. Duplicate refunds are a count of extra refund rows, not a rate.
+
 | | Duplicate refunds | Strict tool accuracy | Outcome accuracy |
 |---|---|---|---|
-| Idempotency off | TODO(me) | TODO(me) | TODO(me) |
-| Idempotency on | TODO(me) | TODO(me) | TODO(me) |
+| Idempotency off | 17 | 60.0% | 64.0% |
+| Idempotency on | 0 | 66.0% | 98.0% |
 
 The interesting gap is when the outcome looks right and the tool path does not. That gap is computed on the results page from the same file.
 
@@ -64,7 +66,7 @@ Decision rule: TODO(me). After `pnpm eval:p3`, this sentence is written into `re
 TODO(me): screenshot of a looping run from `results/traces/p1-loop-1.json`.
 TODO(me): screenshot of a double refund from `results/traces/p2-double-refund.json`.
 
-Those files are written by the eval scripts only when a run actually loops or double-refunds. They are not checked in as samples.
+The double-refund trace is committed because the idempotency-off run produced one. The loop trace is still absent because no guards-off run looped.
 
 ## Run locally
 
@@ -92,7 +94,7 @@ The eval sets are 50 and 30 hand-written tasks against 20 fixed orders. That is 
 ## Resume lines
 
 - Measured a support agent on 50 tasks with guardrails off and on: stuck rate stayed 0% (2.8 steps, about $0.0003 per task) because this model did not loop, so the guards did not have a stuck run to stop.
-- Removed duplicate refunds on retry (TODO(me) down to TODO(me)) by keying each refund to the user request, and reported tool-path accuracy separately from answer accuracy (TODO(me) vs TODO(me)).
+- Removed duplicate refunds on retry (17 down to 0) by keying each refund to the user request, and reported tool-path accuracy separately from database outcome (60.0% vs 64.0% with idempotency off, 66.0% vs 98.0% with it on) on 50 tasks.
 - Compared a single agent with an orchestrator-worker setup on 30 tasks and kept the single agent as the default unless independent subtasks improved success by more than TODO(me) at the measured extra cost.
 
 ## Deploy checklist
@@ -100,7 +102,7 @@ The eval sets are 50 and 30 hand-written tasks against 20 fixed orders. That is 
 1. Create a Groq API key and set a monthly spend limit in the Groq console.
 2. Push this repo to GitHub.
 3. Fill `config/pricing.ts` with the current price per million tokens.
-4. `pnpm eval:baseline` and `pnpm eval:p1` are done and committed. Run `pnpm eval:p2` and `pnpm eval:p3` next, then commit `results/`.
+4. `pnpm eval:baseline`, `pnpm eval:p1`, and `pnpm eval:p2` are done and committed. Run `pnpm eval:p3` next, then commit `results/p3.json`.
 5. Import the GitHub repo in Vercel. The framework is Next.js.
 6. Set `GROQ_API_KEY` and `AGENT_MODEL`. Optionally set `DEMO_PASSCODE`. Add Upstash Redis from the Vercel Marketplace if you want the rate limit to survive across instances.
 7. Open `/playground`, run a preset, confirm the rate limit, then record the demo and replace the TODO(me) links and screenshots in this file.
